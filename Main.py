@@ -328,7 +328,7 @@ def yenilenYemegeGoreEtkiYap():
         
     elif yemek.color() == ('orange','orange'): 
         global delay
-        altinKuyrukSayaci = 100
+        altinKuyrukSayaci = 10
         altinYemekSayaci = 5
         delay -= 0.01
         yemek.color("blue")
