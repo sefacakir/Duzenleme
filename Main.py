@@ -4,24 +4,24 @@ import random
 import keyboard
 from Yem import Yem
 
-delay = 0.05    #hızımızı belirleyen faktör, sleep fonksiyonunda programı bekletmek için kullanıyoruz. ne kadar azalırsa o kadar hızlı olur.
-skor = -3       #puanımızı gösteren sayac, başlangıçta -3, çünkü başlangıçta 3 kuyruk ile başlıyoruz.
-kingSkor = 0    #en yüksek skoru gösteren sayac
-turboBool = False   #yavaşlatma özelliğinin kullanılabilmesi için
+delay = 0.05
+skor = -3       
+kingSkor = 0    
+turboBool = False   
 
-delaySayaci = 10    #delay sayaci, her 10 yemde bir hızımızı biraz daha artırmamız için kullanıyoruz.
-renkSayaci = 0           #bu sayac, yılanın yem yediğinde kafasının renginin değişmesi için kullanılıyor.
-baslangicKuyrukSayaci = 3   #başlangıçta eklenecek kuyruk sayısını belirler.
-altinYemekSayaci = 5    #kaç yemekten sonra altın yemek gelsin, bunu tutar.
-altinKuyrukSayaci = 0   #altın yemek yenildikten sonra kaç adımda kuyruk eklemesi yapılsın 
-turboSayici = 1     #turbo sayacı da, yavaşlama kaç adım geçerli olsun
-delayTutucu = 0     #turbo özelliğinden sonra eski hızına dönmesi için bir tutucu
+delaySayaci = 10    
+renkSayaci = 0           
+baslangicKuyrukSayaci = 3   
+altinYemekSayaci = 5    
+altinKuyrukSayaci = 0   
+turboSayici = 1     
+delayTutucu = 0     
 
 pencere = turtle.Screen()
 pencere.title("Yılan Oyunu")
 pencere.bgcolor("gray")
 pencere.setup(width=700,height=700)
-pencere.tracer(0) #ekranın kendini yenilememesi için
+pencere.tracer(0) 
 
 sYem = Yem("black",-330,110)
 yYem = Yem("green",-330,50)
@@ -46,7 +46,6 @@ bilgilendirme.color("black")
 bilgilendirme.penup()
 bilgilendirme.goto(0,-250)
 bilgilendirme.write("Hoş Geldiniz. Garip bir yılan oyunu ile karşı karşıyasınız.\nBu bölümü okumadan oyuna başlamayın, sonuçları acı olabilir.\n\nSiyah daire, yılanımızın kafasıdır.\nOk tuşları ile yönlendirebilirsiniz.\n\nYeşil daire, yılanın kuyruğudur\nBaşlangıçta 3 birim kuyruk ile başlanacaktır.\n\nYEMLER:\nKırmızı daireler, kalitesiz yemlerdir. \nBu yemler yılanın boyunu ancak bir birim artırabilir.\n\nTuruncu yemler, kaliteli yemlerdir.\nHer 5 kalitesiz yem yemenizin ardından,\nbir kaliteli yem yiyebilirsiniz. 15 puan değerindedir!!\n\nMavi yemler ise, ne olduğu belirsiz yemlerdir. \nBu yemler altın yemlerden sonra gelir. \nBunları yerken dikkatli olun!! \n\nOyuna geçmek için \"Space\" tuşuna basın. Başarılar.. ",align='center',font =('Courier',13,'bold'))
-#bilgilendirme.hideturtle()
 
 skorBilgi = turtle.Turtle()
 skorBilgi.speed(0)
@@ -180,7 +179,7 @@ def tekrarBasla():
     oyunBitti()
     kafa.direction = "stop"
     for i in yemekler:
-        i.goto(1000,1000) #kuyruğu ekran dışına taşıdık
+        i.goto(1000,1000) 
     yemekler.clear()
     kafa.goto(0,0)
     global baslangicKuyrukSayaci
@@ -218,12 +217,12 @@ def oyunBitti():
         value = 1
 
     for i in range(value):
-        for i in range(len(yemekler)-1,-1,-1): #tüm kuyruk beyaz yapıldı.
+        for i in range(len(yemekler)-1,-1,-1): 
             yemekler[i].color("white")
             pencere.update()
             time.sleep(0.02)
 
-        for i in range(len(yemekler)-1,-1,-1): #tüm kuyruk kırmızı yapıldı.
+        for i in range(len(yemekler)-1,-1,-1):
             yemekler[i].color("red")
             pencere.update()
             time.sleep(0.02)
@@ -236,7 +235,7 @@ def yemekYenildiMi():
         return False
 
 def yemekKonumuDegistir():
-    xkonum = random.randint(-250,250) #piksel uyuşmazlığı için ayarlamalar yapıldı.
+    xkonum = random.randint(-250,250) 
     x = xkonum - (xkonum%15)
     ykonum = random.randint(-250,250)
     y = ykonum - (ykonum%15)
@@ -246,12 +245,12 @@ def yemekKonumuDegistir():
 
 
 def kuyrukTakibi():
-    for i in range(len(yemekler)-1,0,-1): #uzunluktan -1 ekleyerek sıfıra kadar.
+    for i in range(len(yemekler)-1,0,-1):
         x = yemekler[i-1].xcor()
         y = yemekler[i-1].ycor()
         yemekler[i].goto(x,y)
     
-    if len(yemekler) >= 1: #ilk düğüm için başı takip etmesi gerektiğini söyledik. aşağıda başı bir sonraki hedefe alıyoruz.
+    if len(yemekler) >= 1: 
         x = kafa.xcor()
         y = kafa.ycor()
         yemekler[0].goto(x,y)
@@ -323,11 +322,11 @@ def yenilenYemegeGoreEtkiYap():
     global skor
     global altinKuyrukSayaci
 
-    if yemek.color() == ('red','red'): #eğer kırmızı yemek yenildi ise bir sonraki altın yemek için sayac başlatılıyor.
+    if yemek.color() == ('red','red'): 
         altinYemekSayaci -= 1
-        kuyrukEkle() #kırmızı yemek yenildiğinde bir kuyruk ekleniyor
+        kuyrukEkle() 
         
-    elif yemek.color() == ('orange','orange'): #burada altın yemek yenildiyse sayac tekrardan hazırlanıyor ve bir sonraki yemeğin rengi kırmızı yapılıyor.
+    elif yemek.color() == ('orange','orange'): 
         global delay
         altinKuyrukSayaci = 100
         altinYemekSayaci = 5
@@ -335,7 +334,6 @@ def yenilenYemegeGoreEtkiYap():
         yemek.color("blue")
 
     else:
-        #burda rastgele bir işlem yapıcaz.
         i = rastGele()
         if i == 0:
             print("Puan kazanılmadı.")
@@ -361,19 +359,18 @@ def yenilenYemegeGoreEtkiYap():
             yemek.color("red")
     
 def altinYemekMi():
-    if altinYemekSayaci == 0: #eğer altın yemek sayacı 0'a ulaştıysa bir sonraki yemek altın yemek olduğu anlamına geliyor.
+    if altinYemekSayaci == 0: 
         yemek.color("orange")
 
 def baslangicKuyrukEklemesi():
     global baslangicKuyrukSayaci
-    if baslangicKuyrukSayaci>0 and kafa.direction!="stop": #program başlangıcında kuyrukların kafa ile çarpışmasını engellemek için
+    if baslangicKuyrukSayaci>0 and kafa.direction!="stop": 
         kuyrukEkle()
-        baslangicKuyrukSayaci -= 1 #başlangıçta 3 kuyruk ile başlaması kuralı koyuyoruz.
+        baslangicKuyrukSayaci -= 1 
 
 def altinYemYenildi():
     global altinKuyrukSayaci
-    if altinKuyrukSayaci > 0 :#altın yem yenildiği takdirde altınKuyruk sayacı 5 yapılıyor.
-        #her adımda bir yeni bir kuyruk eklenmesi için. Eğer bir adımda hepsini eklersek, kuyruk takibinde sıkıntı çıkar.
+    if altinKuyrukSayaci > 0 :
         kuyrukEkle()
         altinKuyrukSayaci -= 1
 
@@ -384,7 +381,7 @@ def atama():
 def turboKontrol():
     global delay
     global turboSayici
-    global turboBool#sayac 0
+    global turboBool
     global delayTutucu
     if turboSayici > 0:
         delay = 0.15
@@ -396,7 +393,7 @@ def turboKontrol():
 
 def ozellikKontrol():
     global turboSayici
-    if turboBool: #x tuşuna basıldığında true oluyor. Turbo aktif edildi.
+    if turboBool: 
         turboKontrol()
     elif turboBool==False and kafa.direction != "stop":
         turboSayici += 1
@@ -408,21 +405,21 @@ def ozellikKontrol():
 
 while True:
     time.sleep(delay)
-    ozellikKontrol()        # x tuşuna basıp özelliği aktif etti mi diye bi kontrol ettim.
-    enYuksekSkorKontrol()   #en yüksek skorun kotrolü gerçekleştiriliyor. Eğer skor daha büyükse, en yüksek skorda ona eşit yapılıyor.
-    skorGuncelle()          #başlangçta skoru -3ten başlattığım için o gözükmesin diye buraya bir karşılaştırma yapısı ekledim.
-    if yemekYenildiMi():  #bir yemek yenildi
+    ozellikKontrol()       
+    enYuksekSkorKontrol()   
+    skorGuncelle()          
+    if yemekYenildiMi():  
         yenilenYemegeGoreEtkiYap()
         altinYemekMi()
-        yemekKonumuDegistir() #yemeğin bir sonraki konumu ayarlanıyor.
-        while(kuyrukYemekCakismasi()): #çakışma durumu varsa eğer tekrar yemeğin konumu ayarlanıyor.
+        yemekKonumuDegistir() 
+        while(kuyrukYemekCakismasi()): 
             yemekKonumuDegistir()
-        renkSayaci = 7 # bu sayac, kafa renginin yeme işleminden sonra 2 adımda bir değişebilmesi için gerekli.
-    renkSayaci = kafaRengiAyarla(renkSayaci) #yılan yem yediğinde kafasının renk değiştirmesi için.
-    kuyrukKafaCakismasi() #kafanın kuyrukta herhangi bir bölüme çarpmasında oyun sona eriyor. Baştan tekrar başlatılıyor.
-    kenaraCarpma() #Kafanın kenara çarpması durumunda yeniden başlatılması için yazılıyor.
+        renkSayaci = 7 
+    renkSayaci = kafaRengiAyarla(renkSayaci) 
+    kuyrukKafaCakismasi() 
+    kenaraCarpma() 
     baslangicKuyrukEklemesi()
     altinYemYenildi()
-    kuyrukTakibi() #kuyruğun kafayı takip etme olayını burada gerçekleştiriliyor. Her bir kuyruk kendisinden önceki kuyruğun yerini alıyor
-    move()  #hareket fonksiyonu, yılanı 1 birim hareket ettiriyor
-    pencere.update() #her bir adımın görüntülenmesi için pencere güncelleniyor.
+    kuyrukTakibi() 
+    move()  
+    pencere.update() 
