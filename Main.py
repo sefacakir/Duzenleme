@@ -4,24 +4,27 @@ import random
 import keyboard
 from Yem import Yem
 
-delay = 0.05
-skor = -3       
-kingSkor = 0    
-turboBool = False   
+delay = 0.05    #hızımızı belirleyen faktör, sleep fonksiyonunda programı bekletmek için kullanıyoruz. ne kadar azalırsa o kadar hızlı olur.
+skor = -3       #puanımızı gösteren sayac, başlangıçta -3, çünkü başlangıçta 3 kuyruk ile başlıyoruz.
+kingSkor = 0    #en yüksek skoru gösteren sayac
 
-delaySayaci = 10    
-renkSayaci = 0           
-baslangicKuyrukSayaci = 3   
-altinYemekSayaci = 5    
-altinKuyrukSayaci = 0   
-turboSayici = 1     
-delayTutucu = 0     
+delaySayaci = 10    #delay sayaci, her 10 yemde bir hızımızı biraz daha artırmamız için kullanıyoruz.
+renkSayaci = 0           #bu sayac, yılanın yem yediğinde kafasının renginin değişmesi için kullanılıyor.
+baslangicKuyrukSayaci = 3   #başlangıçta eklenecek kuyruk sayısını belirler.
+altinYemekSayaci = 5    #kaç yemekten sonra altın yemek gelsin, bunu tutar.
+altinKuyrukSayaci = 0   #altın yemek yenildikten sonra kaç adımda kuyruk eklemesi yapılsın 
+turboBool = False   #yavaşlatma özelliğinin kullanılabilmesi için
+turboSayici = 1     #turbo sayacı da, yavaşlama kaç adım geçerli olsun
+delayTutucu = 0     #turbo özelliğinden sonra eski hızına dönmesi için bir tutucu
+
+icindenGecBool = False
+icindenGecSayac = 1
 
 pencere = turtle.Screen()
 pencere.title("Yılan Oyunu")
 pencere.bgcolor("gray")
-pencere.setup(width=700,height=700)
-pencere.tracer(0) 
+pencere.setup(width = 705,height = 705)
+pencere.tracer(0) #ekranın kendini yenilememesi için
 
 sYem = Yem("black",-330,110)
 yYem = Yem("green",-330,50)
@@ -39,7 +42,8 @@ kafa.goto(0,0)
 kafa.penup()
 kafa.direction = "stop"
 kafa.shapesize(1)
- 
+
+#bilgilendirme = Yazi("black",0,-250,"sa")
 bilgilendirme = turtle.Turtle()
 bilgilendirme.speed(0)
 bilgilendirme.color("black")
@@ -62,21 +66,38 @@ enYuksekSkorBilgi.penup()
 enYuksekSkorBilgi.goto(0,300)
 enYuksekSkorBilgi.hideturtle()
 
-ozellik = turtle.Turtle()
-ozellik.speed(0)
-ozellik.color("black")
-ozellik.penup()
-ozellik.goto(-330,300)
-ozellik.write("Ozellik:",align='left',font =('Courier',13,'bold'))
-ozellik.hideturtle()
+yavaslama = turtle.Turtle()
+yavaslama.speed(0)
+yavaslama.color("black")
+yavaslama.penup()
+yavaslama.goto(-330,300)
+yavaslama.write("Yavaslama:",align='left',font =('Courier',13,'bold'))
+yavaslama.hideturtle()
 
-ozellikDurumu = turtle.Turtle()
-ozellikDurumu.speed(0)
-ozellikDurumu.shape("circle")
-ozellikDurumu.color("lightgreen")
-ozellikDurumu.penup()
-ozellikDurumu.goto(-240,310)
-ozellikDurumu.shapesize(0.5)
+carpisma = turtle.Turtle()
+carpisma.speed(0)
+carpisma.color("black")
+carpisma.penup()
+carpisma.goto(-330,280)
+carpisma.write("Çarpışma :",align='left',font =('Courier',13,'bold'))
+carpisma.hideturtle()
+
+carpismaDurumu = turtle.Turtle()
+carpismaDurumu.speed(0)
+carpismaDurumu.shape("circle")
+carpismaDurumu.color("green")
+carpismaDurumu.penup()
+carpismaDurumu.goto(-220,290)
+carpismaDurumu.shapesize(0.5)
+
+
+yavaslamaDurumu = turtle.Turtle()
+yavaslamaDurumu.speed(0)
+yavaslamaDurumu.shape("circle")
+yavaslamaDurumu.color("green")
+yavaslamaDurumu.penup()
+yavaslamaDurumu.goto(-220,310)
+yavaslamaDurumu.shapesize(0.5)
 
 yemek = turtle.Turtle()
 yemek.speed(0)
@@ -88,51 +109,45 @@ yemek.shapesize(1)
 
 yemekler = []
 
+def atla(): 
+    move()
+    move()
+    move()
+    move()
+    move()
+
 def goUp():
     if kafa.direction != "down":
         if kafa.direction == "up":
-            move()
-            move()
-            move()
-            move()
-
+            atla()
         elif len(yemekler)>0 and yemekler[0].ycor()-15 == kafa.ycor():
-            print("Çarpışma önlendi.")
+            print("Delaydan kaynaklanan kafa çakışması engellendi.")
         else:
             kafa.direction = 'up'
 
 def goDown():
     if kafa.direction != "up":
         if kafa.direction == "down":
-            move()
-            move()
-            move()
-            move()
+            atla()
         elif len(yemekler)>0 and yemekler[0].ycor()+15 == kafa.ycor():
-            print("Çarpışma önlendi.")
+            print("Delaydan kaynaklanan kafa çakışması engellendi.")
         else:
             kafa.direction = 'down'
 
 def goRight():
     if kafa.direction != "left":
         if kafa.direction == "right":
-            move()
-            move()
-            move()
-            move()
+            atla()
         elif len(yemekler)>0 and yemekler[0].xcor()-15 == kafa.xcor():
-            print("Çarpışma önlendi.")
+            print("Delaydan kaynaklanan kafa çakışması engellendi.")
         else:
             kafa.direction = 'right'
 def goLeft():
     if kafa.direction != "right":
         if kafa.direction == "left":
-            move()
-            move()
-            move()
-            move()
+            atla()
         elif len(yemekler)>0 and yemekler[0].xcor()+15 == kafa.xcor():
-            print("Çarpışma önlendi.")
+            print("Delaydan kaynaklanan kafa çakışması engellendi.")
         else:
             kafa.direction = 'left'
 
@@ -159,6 +174,17 @@ def yavasla():
     if turboSayici > 0:
         turboSayici = 30
         turboBool = True
+        print("Yavaşlama becerisi aktif edildi.")
+
+def icindenGec():
+    global icindenGecBool
+    global icindenGecSayac
+    if icindenGecSayac > 0:
+        icindenGecSayac = 100
+        icindenGecBool = True
+        print("Çarpışma becerisi aktif edildi.")
+
+
 
 
 pencere.listen()
@@ -167,6 +193,7 @@ pencere.onkeypress(goDown, 'Down')
 pencere.onkeypress(goRight, 'Right')
 pencere.onkeypress(goLeft, 'Left')
 pencere.onkeypress(yavasla,'x')
+pencere.onkeypress(icindenGec,'z')
 
 
 def beyazKafa():
@@ -179,7 +206,7 @@ def tekrarBasla():
     oyunBitti()
     kafa.direction = "stop"
     for i in yemekler:
-        i.goto(1000,1000) 
+        i.goto(1000,1000) #kuyruğu ekran dışına taşıdık
     yemekler.clear()
     kafa.goto(0,0)
     global baslangicKuyrukSayaci
@@ -194,6 +221,14 @@ def tekrarBasla():
     altinKuyrukSayaci = 0
     global delay
     delay = 0.05
+    global turboBool
+    turboBool = False
+    global turboSayici
+    turboSayici = 1
+    global icindenGecSayac
+    icindenGecSayac = 1
+    global icindenGecBool 
+    icindenGecBool = False
 
 
 def kuyrukEkle():
@@ -205,27 +240,19 @@ def kuyrukEkle():
     yemekler.append(kuyruk)
     global skor
     skor += 1
-#    print("Skor: {}".format(skor))
 
 def oyunBitti():
-    value = 3
-    if len(yemekler)<10:
-        value = 3
-    elif len(yemekler)<20:
-        value = 2
-    else:
-        value = 1
-
-    for i in range(value):
-        for i in range(len(yemekler)-1,-1,-1): 
+    for i in range(4):
+        for i in range(len(yemekler)-1,-1,-1): #tüm kuyruk beyaz yapıldı.
             yemekler[i].color("white")
-            pencere.update()
-            time.sleep(0.02)
+        
+        pencere.update()
+        time.sleep(0.1)
 
-        for i in range(len(yemekler)-1,-1,-1):
+        for i in range(len(yemekler)-1,-1,-1): #tüm kuyruk kırmızı yapıldı.
             yemekler[i].color("red")
-            pencere.update()
-            time.sleep(0.02)
+        pencere.update()
+        time.sleep(0.1)
 
 
 def yemekYenildiMi():
@@ -235,22 +262,21 @@ def yemekYenildiMi():
         return False
 
 def yemekKonumuDegistir():
-    xkonum = random.randint(-250,250) 
+    xkonum = random.randint(-250,250)               #piksel uyuşmazlığı için ayarlamalar yapıldı.
     x = xkonum - (xkonum%15)
     ykonum = random.randint(-250,250)
     y = ykonum - (ykonum%15)
-    #print("Yemek konumu: ",x,y)
     yemek.goto(x,y)
 
 
 
 def kuyrukTakibi():
-    for i in range(len(yemekler)-1,0,-1):
+    for i in range(len(yemekler)-1,0,-1):           #uzunluktan -1 ekleyerek sıfıra kadar.
         x = yemekler[i-1].xcor()
         y = yemekler[i-1].ycor()
         yemekler[i].goto(x,y)
     
-    if len(yemekler) >= 1: 
+    if len(yemekler) >= 1:                          #ilk düğüm için başı takip etmesi gerektiğini söyledik. aşağıda başı bir sonraki hedefe alıyoruz.
         x = kafa.xcor()
         y = kafa.ycor()
         yemekler[0].goto(x,y)
@@ -265,10 +291,11 @@ def kuyrukYemekCakismasi():
             False
 
 def kuyrukKafaCakismasi():
-    for i in range(len(yemekler)-1,0,-1):
-        if kafa.xcor() == yemekler[i].xcor() and kafa.ycor() == yemekler[i].ycor():
-            tekrarBasla()
-            break
+    if icindenGecBool == False:
+        for i in range(len(yemekler)-1,0,-1):
+            if kafa.xcor() == yemekler[i].xcor() and kafa.ycor() == yemekler[i].ycor():
+                tekrarBasla()
+                break
         
 def kafaRengiAyarla(sayac):
     if sayac>5 or (sayac>1 and sayac<=3):
@@ -322,55 +349,64 @@ def yenilenYemegeGoreEtkiYap():
     global skor
     global altinKuyrukSayaci
 
-    if yemek.color() == ('red','red'): 
+    if yemek.color() == ('red','red'): #eğer kırmızı yemek yenildi ise bir sonraki altın yemek için sayac başlatılıyor.
         altinYemekSayaci -= 1
-        kuyrukEkle() 
-        
-    elif yemek.color() == ('orange','orange'): 
+        kuyrukEkle() #kırmızı yemek yenildiğinde bir kuyruk ekleniyor
+        print("Kırmızı yem yenildi: Skor +1")
+
+    elif yemek.color() == ('orange','orange'): #burada altın yemek yenildiyse sayac tekrardan hazırlanıyor ve bir sonraki yemeğin rengi kırmızı yapılıyor.
         global delay
         altinKuyrukSayaci = 10
         altinYemekSayaci = 5
-        delay -= 0.01
+        if delay > 0.01:
+            print("Hız %20 oranında artırıldı.")
+            delay -= 0.01
+        else:
+            print("Hız maksimumda, tebrikler fena değilsiniz.")
+            delay = 0.005
         yemek.color("blue")
+        print("Altın yem yenildi: Skor +15")
 
     else:
+        #burda rastgele bir işlem yapıcaz.
         i = rastGele()
-        if i == 0:
-            print("Puan kazanılmadı.")
-            yemek.color("red")
-        elif i==1:
+        if i==0:
             altinYemekSayaci=0
-            print("Bir sonraki yemek altın yemek olacak.")
-        elif i==2:
-            print("5 kuyruk silindi.")
+            kuyrukEkle()
+            print("Mavi yem yenildi. +1 puan kazanıldı. Ayrıca bir sonraki yem altın yem yapıldı.")
+        elif i==1:
+            print("Mavi yem yenildi. -5 puan kaybedildi.")
             skor -=5
             for i in range(5):
                 yemekler[len(yemekler)-1].goto(1000,1000)
                 yemekler.pop()
-        elif i==3:
-            print("-15 puan")
+            yemek.color("red")
+        elif i==2:
+            print("Mavi yem yenildi. -15 paun kaybedildi.")
             skor -= 15
             for i in range(15):
                 yemekler[len(yemekler)-1].goto(1000,1000)
                 yemekler.pop()
+            yemek.color("red")
         else:
-            print("5 kuyruk eklendi.")
+            print("Mavi yem yenildi. +5 puan kazanıldı.")
             altinKuyrukSayaci = 5
             yemek.color("red")
     
 def altinYemekMi():
-    if altinYemekSayaci == 0: 
+    if altinYemekSayaci == 0: #eğer altın yemek sayacı 0'a ulaştıysa bir sonraki yemek altın yemek olduğu anlamına geliyor.
         yemek.color("orange")
 
 def baslangicKuyrukEklemesi():
     global baslangicKuyrukSayaci
-    if baslangicKuyrukSayaci>0 and kafa.direction!="stop": 
+    if baslangicKuyrukSayaci>0 and kafa.direction!="stop": #program başlangıcında kuyrukların kafa ile çarpışmasını engellemek için
         kuyrukEkle()
-        baslangicKuyrukSayaci -= 1 
+        baslangicKuyrukSayaci -= 1 #başlangıçta 3 kuyruk ile başlaması kuralı koyuyoruz.
 
 def altinYemYenildi():
     global altinKuyrukSayaci
-    if altinKuyrukSayaci > 0 :
+    if altinKuyrukSayaci > 0 :#altın yem yenildiği takdirde altınKuyruk sayacı 10 yapılıyor.
+        #her adımda bir yeni bir kuyruk eklenmesi için. Eğer bir adımda hepsini eklersek, kuyruk takibinde sıkıntı çıkar.
         kuyrukEkle()
         altinKuyrukSayaci -= 1
 
@@ -381,45 +417,70 @@ def atama():
 def turboKontrol():
     global delay
     global turboSayici
-    global turboBool
+    global turboBool#sayac 0
     global delayTutucu
-    if turboSayici > 0:
+    if turboSayici > 0: #şuanda kullanılıyor.
         delay = 0.15
         turboSayici -= 1
-    else:
+        yavaslamaDurumu.color("lightgreen")
+    else:   #şuanda kullanılamaz durumda, hazırlanma sürecinde.
         delay = delayTutucu
         turboSayici = -200
         turboBool = False
+        yavaslamaDurumu.color("red")
+        print("Yavaşlatma becerisinin kullanım süresi doldu. Tekrar kullanım için hazırlanıyor")
 
 def ozellikKontrol():
     global turboSayici
-    if turboBool: 
+    if turboBool:                                       #yavaşlama becerisinin kontrolü gerçekleştiriliyor.
         turboKontrol()
-    elif turboBool==False and kafa.direction != "stop":
+    elif turboBool==False and kafa.direction != "stop": #eğer beceri kullanılmıyorsa ve yılan hareket ediyorsa şuanda kullanılabilir hale getiriliyor.
         turboSayici += 1
-    
-    if turboBool == False and turboSayici > 0:
-        ozellikDurumu.color("lightgreen")
+        if turboSayici==0:
+            print("Yavaşlama becerisi kullanıma hazır.")
+            yavaslamaDurumu.color("green")
+
+
+def icindenGecKontrol():
+    global icindenGecSayac
+    global icindenGecBool
+    if icindenGecBool and icindenGecSayac > 0:  #true yapıldı ve 30 atandı. Kullanılıyor şuanda
+        icindenGecSayac -= 1                    #her adımda bir azaltılıyor. hala true olarak kalıyor.
+        carpismaDurumu.color("lightgreen")
+        if icindenGecSayac == 0:                #özellik kullanımı bitti, şimdi kullanılamaz hale getirmem lazım.
+            icindenGecSayac = -200              #200 birim sonra kullanılabilir hale gelicek
+            icindenGecBool = False
+            carpismaDurumu.color("red")
+            print("Çarpışma becerisinin kullanımı doldu. Geçici bir süre kullanılamayacak.")
     else:
-        ozellikDurumu.color("red")
+        icindenGecSayac += 1                    #her adımda sayacımızı +1 artırıyoruz.
+
+    if icindenGecBool == False and icindenGecSayac < 0:
+        carpismaDurumu.color("red")
+        if icindenGecSayac+1 == 0:
+            carpismaDurumu.color("green")
+            print("Çarpışma becerisi kullanıma hazır.")
+        
+
 
 while True:
     time.sleep(delay)
-    ozellikKontrol()       
-    enYuksekSkorKontrol()   
-    skorGuncelle()          
-    if yemekYenildiMi():  
-        yenilenYemegeGoreEtkiYap()
-        altinYemekMi()
-        yemekKonumuDegistir() 
-        while(kuyrukYemekCakismasi()): 
+    icindenGecKontrol()
+    ozellikKontrol()                            # x tuşuna basıp özelliği aktif etti mi diye kontrol ediyoruz.
+    enYuksekSkorKontrol()                       #en yüksek skorun kotrolü gerçekleştiriliyor. Eğer skor daha büyükse, en yüksek skorda ona eşit yapılıyor.
+    skorGuncelle()                              #başlangçta skoru -3ten başlattığım için o gözükmesin diye buraya bir karşılaştırma yapısı eklendi.
+    if yemekYenildiMi():                        #bir yemek yenildiyse aşağıdaki işlemler uygulanacak.
+        yenilenYemegeGoreEtkiYap()              #yenilen yemeğe göre yılanımızda değişiklikler olacaktır. Hareket hızı, uzama vs.
+        altinYemekMi()                          #bir sonraki yemin altın yemek olup olmadığı burada ayarlanıyor.
+        yemekKonumuDegistir()                   #bir sonraki yemin konumu ayarlanıyor.
+        while(kuyrukYemekCakismasi()):          #çakışma durumu varsa eğer tekrar yemeğin konumu ayarlanıyor.
             yemekKonumuDegistir()
-        renkSayaci = 7 
+        renkSayaci = 7                          # bu sayac, kafa renginin yeme işleminden sonra 2 adımda bir değişebilmesi için gerekli.
     renkSayaci = kafaRengiAyarla(renkSayaci) 
-    kuyrukKafaCakismasi() 
-    kenaraCarpma() 
-    baslangicKuyrukEklemesi()
-    altinYemYenildi()
-    kuyrukTakibi() 
-    move()  
-    pencere.update() 
+    kuyrukKafaCakismasi()                       #kafanın kuyrukta herhangi bir bölüme çarpmasında oyun sona eriyor. Baştan tekrar başlatılıyor.
+    kenaraCarpma()                              #Kafanın kenara çarpması durumunda yeniden başlatılması için yazılıyor.
+    baslangicKuyrukEklemesi()                   #başlangıçta 3 birim kuyruk eklenmesi için kullanılıyor.
+    altinYemYenildi()                           #yenilen yem altın yem ise her adımda kuyruk eklemesi gerçekleştirebilmek için gerekli.
+    kuyrukTakibi()                              #kuyruğun kafayı takip etme olayını burada gerçekleştiriliyor. Her bir kuyruk kendisinden önceki kuyruğun yerini alıyor
+    move()                                      #hareket fonksiyonu, yılanı 1 birim hareket ettiriyor
+    pencere.update()                            #her bir adımın görüntülenmesi için pencere güncelleniyor.+
