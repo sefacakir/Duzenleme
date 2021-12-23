@@ -43,7 +43,6 @@ kafa.penup()
 kafa.direction = "stop"
 kafa.shapesize(1)
 
-#bilgilendirme = Yazi("black",0,-250,"sa")
 bilgilendirme = turtle.Turtle()
 bilgilendirme.speed(0)
 bilgilendirme.color("black")
@@ -170,6 +169,9 @@ def yavasla():
     global turboBool
     global delayTutucu
     global delay
+    if turboBool == True:
+        #özellik kullanılıyor demektir.
+        return
     delayTutucu = delay
     if turboSayici > 0:
         turboSayici = 30
@@ -179,6 +181,8 @@ def yavasla():
 def icindenGec():
     global icindenGecBool
     global icindenGecSayac
+    if icindenGecBool == True:
+        return
     if icindenGecSayac > 0:
         icindenGecSayac = 100
         icindenGecBool = True
